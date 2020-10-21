@@ -111,6 +111,65 @@ void ShowEdgeValue(MGraph* G, VertexType x, VertexType y)
           }
 }
 
+/*
+在图中寻找某一个顶点的邻接点
+*/
+//在图G中顶点X的第一个邻接点，若有则返回顶点号，若没有则返回-1
+int FirstNeighbor(MGraph G, VertexType x)
+{
+          int x_pos = 0;
+          /*寻找第一个顶点x在表的位置*/
+          for (x_pos; x_pos < G.MaxVertexNum; ++x_pos)
+          {
+                    if (G.Vex[x_pos] == x)
+                    {
+                              break;
+                    }
+          }
+          int flag = 0;       //判断是否找到
+          for (int TheFirst = 0;  TheFirst < G.MaxVertexNum; ++TheFirst)
+          {
+                    if (G.Edge[x_pos][TheFirst] == 1)
+                    {
+                              return TheFirst;    //返回编号
+                    }
+          }
+          if (!flag)
+          {
+                    return -1;          //没有找到
+          }
+}
+
+//在图G中顶点X的一个邻接点，返回除了顶点y以外的下一个顶点号
+//若y是x的最后一个临界点，则返回-1
+int NextNeighbor(MGraph G, VertexType x, VertexType y)
+{
+          int x_pos = 0, y_pos = 0;     //用于保存x和y的位置
+          for (int i = 0 ; i < G.MaxVertexNum; ++i)
+          {
+                    if (G.Vex[i] == x)
+                    {
+                              x_pos = i;
+                    }
+                    if (G.Vex[i] == y)
+                    {
+                              y_pos = i;
+                    }
+          }
+          int flag = 0;       //判断是否找到
+          for (int TheNext = y_pos+1; TheNext < G.MaxVertexNum; ++TheNext)
+          {
+                    if (G.Edge[x_pos][TheNext] == 1)
+                    {
+                              return TheNext;    //返回编号
+                    }
+          }
+          if (!flag)
+          {
+                    return -1;          //没有找到
+          }
+}
+
 //图G的销毁
 void DestroyGraph(MGraph* G)
 {
