@@ -43,8 +43,14 @@ void Neighbors_nodirect(MGraph G, VertexType x)
           }
 }
 
-//在图G中添加无向边(x,y)
+//在图G中添加无向边(x,y)，该函数不支持修改权值，使用默认权值1
 int AddEdge_nodirect(MGraph* G, VertexType x, VertexType y)
+{
+          return AddEdgeNoDirectEdgeValue(G, x, y, 1);
+}
+
+//在无向图G添加一条无向边(x, y)，该函数支持修改权值
+int AddEdgeNoDirectEdgeValue(MGraph* G, VertexType x, VertexType y, int Edge_Value)
 {
           int x_pos = 0, y_pos = 0;     //x和y的位置
           int x_status = 0, y_status = 0;    //判断是否存在两个顶点
@@ -64,7 +70,7 @@ int AddEdge_nodirect(MGraph* G, VertexType x, VertexType y)
           if (x_status && y_status)
           {
                     G->arcnum++;        //边数自增
-                    G->Edge[x_pos][y_pos] = G->Edge[y_pos][x_pos] = 1;
+                    G->Edge[x_pos][y_pos] = G->Edge[y_pos][x_pos] = Edge_Value;
                     return TRUE;
           }
           else

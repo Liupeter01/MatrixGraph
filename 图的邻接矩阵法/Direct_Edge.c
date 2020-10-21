@@ -47,8 +47,14 @@ int  Adjcent_direct(MGraph G, VertexType x, VertexType y)
           return (G.Edge[x_pos][y_pos]);
 }
 
-//在图G中添加有向边<x,y>
+//在图G中添加有向边<x,y>，该函数不支持修改权值，权值默认为1
 int AddEdge_direct(MGraph* G, VertexType x, VertexType y)
+{
+          return AddEdgeDirectEdgeValue(G, x, y, 1);        //默认参数为1
+}
+
+//在有向图G添加一条无向边(x, y)，该函数支持修改权值
+int AddEdgeDirectEdgeValue(MGraph* G, VertexType x, VertexType y, int Edge_Value)
 {
           int x_pos = 0, y_pos = 0;     //x和y的位置
           int x_status = 0, y_status = 0;    //判断是否存在两个顶点
@@ -68,7 +74,7 @@ int AddEdge_direct(MGraph* G, VertexType x, VertexType y)
           if (x_status && y_status)
           {
                     G->arcnum++;        //边数自增
-                    G->Edge[x_pos][y_pos] = 1;
+                    G->Edge[x_pos][y_pos] = Edge_Value;
                     return TRUE;
           }
           else
