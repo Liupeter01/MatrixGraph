@@ -77,6 +77,40 @@ int DeleteVertex(MGraph* G, VertexType x)
           }
 }
 
+//输出图中某条边的权值
+void ShowEdgeValue(MGraph* G, VertexType x, VertexType y)
+{
+          int x_pos = 0, y_pos = 0;
+          /*寻找第一个顶点x在表的位置*/
+          for (x_pos; x_pos < G->MaxVertexNum; ++x_pos)
+          {
+                    if (G->Vex[x_pos] == x)
+                    {
+                              break;
+                    }
+          }
+          /*寻找第二个顶点y在表的位置*/
+          for (y_pos; y_pos < G->MaxVertexNum; ++y_pos)
+          {
+                    if (G->Vex[y_pos] == x)
+                    {
+                              break;
+                    }
+          }
+          if (G->Edge[x_pos][y_pos] == 0)
+          {
+                    printf("该边不存在\n");
+          }
+          else if(G->Edge[x_pos][y_pos] == 1)
+          {
+                    printf("该边只有默认权值1\n");
+          }
+          else
+          {
+                    printf("边%c%c的权值为：%d\n", x, y, G->Edge[x_pos][y_pos]);
+          }
+}
+
 //图G的销毁
 void DestroyGraph(MGraph* G)
 {

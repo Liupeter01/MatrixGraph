@@ -28,5 +28,8 @@ void CreateBatchVertex(MGraph* G, VertexType* arr);
 //在图G中删除结点x
 int DeleteVertex(MGraph* G, VertexType x);
 
+//输出图中某条边的权值
+void ShowEdgeValue(MGraph* G, VertexType x, VertexType y);
+
 //图G的销毁
 void DestroyGraph(MGraph* G);
