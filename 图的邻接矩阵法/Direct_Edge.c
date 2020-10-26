@@ -47,6 +47,34 @@ int  Adjcent_direct(MGraph G, VertexType x, VertexType y)
           return (G.Edge[x_pos][y_pos]);
 }
 
+//计算某一个顶点的入度数量
+int CalculateEnterVertex(MGraph G, VertexType x)
+{
+          int counter = 0;
+          for (int i = 0; i < G.vexnum; ++i)
+          {
+                    if (G.Edge[i][LocateVertex(&G, x)] != 0)      //以列为单位进行遍历
+                    {
+                              counter++;
+                    }
+          }
+          return counter;
+}
+
+//计算某一个顶点的出度数量
+int CalculateOutVertex(MGraph G, VertexType x)
+{
+          int counter = 0;
+          for (int i = 0; i < G.vexnum; ++i)
+          {
+                    if (G.Edge[LocateVertex(&G, x)][i] != 0)//以行为单位进行遍历
+                    {
+                              counter++;
+                    }
+          }
+          return counter;
+}
+
 //在图G中添加有向边<x,y>，该函数不支持修改权值，权值默认为1
 int AddEdge_direct(MGraph* G, VertexType x, VertexType y)
 {
