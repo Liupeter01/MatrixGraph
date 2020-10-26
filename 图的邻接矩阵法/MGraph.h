@@ -31,9 +31,10 @@ int DeleteVertex(MGraph* G, VertexType x);
 //输出图中某条边的权值
 void ShowEdgeValue(MGraph* G, VertexType x, VertexType y);
 
-/*
-在图中寻找某一个顶点的邻接点
-*/
+//在图G中找到顶点下标
+int LocateVertex(MGraph* G, VertexType x);
+
+/*在图中寻找某一个顶点的邻接点*/
 //在图G中顶点X的第一个邻接点，若有则返回顶点号，若没有则返回-1
 int FirstNeighbor(MGraph G, VertexType x);
 

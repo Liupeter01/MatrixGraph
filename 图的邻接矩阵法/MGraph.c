@@ -127,16 +127,22 @@ int FirstNeighbor(MGraph G, VertexType x)
                     }
           }
           int flag = 0;       //判断是否找到
-          for (int TheFirst = 0;  TheFirst < G.MaxVertexNum; ++TheFirst)
+          int TheFirst = 0;
+          for (TheFirst = 0;  TheFirst < G.MaxVertexNum; ++TheFirst)
           {
                     if (G.Edge[x_pos][TheFirst] == 1)
                     {
-                              return TheFirst;    //返回编号
+                              flag = 1;
+                              break;
                     }
           }
           if (!flag)
           {
                     return -1;          //没有找到
+          }
+          else
+          {
+                    return TheFirst;    //返回编号
           }
 }
 
@@ -157,17 +163,37 @@ int NextNeighbor(MGraph G, VertexType x, VertexType y)
                     }
           }
           int flag = 0;       //判断是否找到
-          for (int TheNext = y_pos+1; TheNext < G.MaxVertexNum; ++TheNext)
+          int TheNext = 0;
+          for (TheNext = y_pos+1; TheNext < G.MaxVertexNum; ++TheNext)
           {
                     if (G.Edge[x_pos][TheNext] == 1)
                     {
-                              return TheNext;    //返回编号
+                              flag = 1;
+                              break;
                     }
           }
           if (!flag)
           {
                     return -1;          //没有找到
           }
+          else
+          {
+                    return TheNext;    //返回编号
+          }
+}
+
+//在图G中找到顶点下标
+int LocateVertex(MGraph* G, VertexType x)
+{
+          int x_pos = 0;
+          for (x_pos; x_pos < G->MaxVertexNum; ++x_pos)
+          {
+                    if (G->Vex[x_pos] == x)
+                    {
+                              break;
+                    }
+          }
+          return x_pos;
 }
 
 //图G的销毁
