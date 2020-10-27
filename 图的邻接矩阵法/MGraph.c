@@ -27,10 +27,11 @@ int InsertVertex(MGraph* G, VertexType x)
                     G->Vex[G->vexnum] = x;      //新增加一个结点
                     for (int i = 0; i < G->MaxVertexNum; ++i)
                     {
-                              G->Edge[G->vexnum][i] = 0;    //行清空
-                              G->Edge[i][G->vexnum] = 0;    //列清空
+                              G->Edge[G->vexnum][i] = MaxEdgeLength;    //行设置为不连通
+                              G->Edge[i][G->vexnum] = MaxEdgeLength;    //列清空设置为不连通
                     }
                     G->vexnum++;                  //结点数+1
+                    G->Edge[G->vexnum][G->vexnum] = 0;    //位于对角线上的元素设置为0
                     return TRUE;
           }
 }
@@ -47,27 +48,29 @@ void CreateBatchVertex(MGraph* G, VertexType* arr)
           }
 }
 
-//在图G中删除结点x
-int DeleteVertex(MGraph* G, VertexType x)
+//在图G中删除结点x，该函数包含顶点的有向边和无向边的处理
+int DeleteVertex(MGraph* G, VertexType x)          
 {
-          int x_pos = 0;      //保存下标位置
+          int x_pos = 0;
           int flag = 0;
+          G->Vex[x_pos] = 0;                      //删除位于顶点数组中该顶点的存在
           for (x_pos; x_pos < G->MaxVertexNum; ++x_pos)
           {
                     if (G->Vex[x_pos] == x)           // 在Vex中找到该结点并保存下标
                     {
-                              G->Vex[x_pos] = 0;           //代表该数据不存在
+                              G->Vex[x_pos] = 0;           //删除位于顶点数组中该顶点的存在
                               flag = 1;
                               break;
                     }
           }
           if (flag)
           {
-                    for (int i = 0; i < G->MaxVertexNum; ++i)
+                    for (int i = 0; i < G->MaxVertexNum; ++i)   //将该顶点的所有的边删除
                     {
-                              G->Edge[x_pos][i] = 0; //行清空
-                              G->Edge[i][x_pos] = 0;//列清空
+                              G->Edge[x_pos][i] = MaxEdgeLength; //行清空删除所有的出边
+                              G->Edge[i][x_pos] = MaxEdgeLength;//列清空删除所有的入边                    
                     }
+                    G->Edge[x_pos][x_pos] = 0;              //重置位于对角线上的元素为0
                     G->vexnum--;        //结点数-1
                     return TRUE;
           }
@@ -97,13 +100,13 @@ void ShowEdgeValue(MGraph* G, VertexType x, VertexType y)
                               break;
                     }
           }
-          if (G->Edge[x_pos][y_pos] == 0)
+          if (G->Edge[x_pos][y_pos] == 0 || G->Edge[x_pos][y_pos] == MaxEdgeLength)
           {
                     printf("该边不存在\n");
           }
           else if(G->Edge[x_pos][y_pos] == 1)
           {
-                    printf("该边只有默认权值1\n");
+                    printf("该边使用无权图的默认权值1\n");
           }
           else
           {
@@ -117,20 +120,13 @@ void ShowEdgeValue(MGraph* G, VertexType x, VertexType y)
 //在图G中顶点X的第一个邻接点，若有则返回顶点号，若没有则返回-1
 int FirstNeighbor(MGraph G, VertexType x)
 {
-          int x_pos = 0;
-          /*寻找第一个顶点x在表的位置*/
-          for (x_pos; x_pos < G.MaxVertexNum; ++x_pos)
-          {
-                    if (G.Vex[x_pos] == x)
-                    {
-                              break;
-                    }
-          }
+          int x_pos = LocateVertex(&G, x);
+
           int flag = 0;       //判断是否找到
           int TheFirst = 0;
           for (TheFirst = 0;  TheFirst < G.MaxVertexNum; ++TheFirst)
           {
-                    if (G.Edge[x_pos][TheFirst] == 1)
+                    if (G.Edge[x_pos][TheFirst] != 0 && G.Edge[x_pos][TheFirst] != MaxEdgeLength) //不是自身且必须连通
                     {
                               flag = 1;
                               break;
@@ -150,23 +146,13 @@ int FirstNeighbor(MGraph G, VertexType x)
 //若y是x的最后一个临界点，则返回-1
 int NextNeighbor(MGraph G, VertexType x, VertexType y)
 {
-          int x_pos = 0, y_pos = 0;     //用于保存x和y的位置
-          for (int i = 0 ; i < G.MaxVertexNum; ++i)
-          {
-                    if (G.Vex[i] == x)
-                    {
-                              x_pos = i;
-                    }
-                    if (G.Vex[i] == y)
-                    {
-                              y_pos = i;
-                    }
-          }
+          int x_pos = LocateVertex(&G, x);     //用于保存x的位置
+          int y_pos = LocateVertex(&G, y);     //用于保存y的位置
           int flag = 0;       //判断是否找到
           int TheNext = 0;
-          for (TheNext = y_pos+1; TheNext < G.MaxVertexNum; ++TheNext)
+          for (TheNext = y_pos + 1; TheNext < G.MaxVertexNum; ++TheNext)
           {
-                    if (G.Edge[x_pos][TheNext] == 1)
+                    if (G.Edge[x_pos][TheNext] != 0 && G.Edge[x_pos][TheNext] != MaxEdgeLength) //不是自身且必须连通
                     {
                               flag = 1;
                               break;

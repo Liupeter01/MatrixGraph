@@ -4,6 +4,9 @@
 #include<stdlib.h>
 #include<Windows.h>
 
+/*对于边的权的连通性的设定*/
+#define MaxEdgeLength 0xFFFFFFFE     //不连通
+
 #define VertexType char
 #define EdgeType int
 
@@ -25,7 +28,7 @@ int InsertVertex(MGraph* G, VertexType x);
 //在图G中根据顶点集合批量插入顶点
 void CreateBatchVertex(MGraph* G, VertexType* arr);
 
-//在图G中删除结点x
+//在图G中删除结点x，该函数包含顶点的有向边和无向边的处理
 int DeleteVertex(MGraph* G, VertexType x);
 
 //输出图中某条边的权值
