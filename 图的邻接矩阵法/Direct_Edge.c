@@ -69,8 +69,14 @@ int AddEdgeDirectEdgeValue(MGraph* G, VertexType x, VertexType y, int Edge_Value
           int x_status = 0, y_status = 0;    //判断是否存在两个顶点
           for (int i = 0; i < G->MaxVertexNum; ++i)
           {
-                    x_status = (G->Vex[i] == x) ? 1 : 0;
-                    y_status = (G->Vex[i] == y) ? 1 : 0;
+                    if (G->Vex[i] == x)
+                    {
+                              x_status = 1;
+                    }
+                    if (G->Vex[i] == y)
+                    {
+                              y_status = 1;
+                    }
           }
           if (x_status && y_status)
           {
@@ -93,8 +99,14 @@ int RemoveEdge_direct(MGraph* G, VertexType x, VertexType y)
           int x_status = 0, y_status = 0;    //判断是否存在两个顶点
           for (int i = 0; i < G->MaxVertexNum; ++i)
           {
-                    x_status = (G->Vex[i] == x) ? 1 : 0;
-                    y_status = (G->Vex[i] == y) ? 1 : 0;
+                    if (G->Vex[i] == x)
+                    {
+                              x_status = 1;
+                    }
+                    if (G->Vex[i] == y)
+                    {
+                              y_status = 1;
+                    }
           }
           if (x_status && y_status)               //两个点同时存在且边必须存在
           {
