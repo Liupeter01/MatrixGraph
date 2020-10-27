@@ -5,7 +5,7 @@
 #include<Windows.h>
 
 /*对于边的权的连通性的设定*/
-#define MaxEdgeLength 0xFFFFFFFE     //不连通
+#define MaxEdgeLength 0xFFFFF    //不连通
 
 #define VertexType char
 #define EdgeType int
@@ -44,6 +44,9 @@ int FirstNeighbor(MGraph G, VertexType x);
 //在图G中顶点X的第一个邻接点，返回除了顶点y以外的下一个顶点号
 //若y是x的最后一个临界点，则返回-1
 int NextNeighbor(MGraph G, VertexType x, VertexType y);
+
+//图G的输出
+void DisplayGraph(MGraph G);
 
 //图G的销毁
 void DestroyGraph(MGraph* G);

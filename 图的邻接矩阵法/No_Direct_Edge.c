@@ -40,7 +40,7 @@ int AddEdgeNoDirectEdgeValue(MGraph* G, VertexType x, VertexType y, int Edge_Val
                     if (G->Vex[i] == x)
                     {
                               x_status = 1;
-                    }
+                   }
                     if (G->Vex[i] == y)
                     {
                               y_status = 1;
@@ -83,8 +83,12 @@ int RemoveEdge_nodirect(MGraph* G, VertexType x, VertexType y)
                     {
                               G->Edge[x_pos][y_pos] = 0;
                     }
-                    G->Edge[x_pos][y_pos] = MaxEdgeLength;  //非连通状态
-                    G->Edge[y_pos][x_pos] = MaxEdgeLength;  //非连通状态
+                    else
+                    {
+                              G->Edge[x_pos][y_pos] = MaxEdgeLength;  //非连通状态
+                              G->Edge[y_pos][x_pos] = MaxEdgeLength;  //非连通状态
+                    }
+                    
                     return TRUE;
           }
           else

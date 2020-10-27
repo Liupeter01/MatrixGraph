@@ -1,5 +1,18 @@
 #include"MGraph.h"
 
+//图G的输出
+void DisplayGraph(MGraph G)
+{
+          for (int i = 0; i < G.vexnum; ++i)
+          {
+                    for (int j = 0; j < G.vexnum; ++j)
+                    {
+                              printf("%d  ", G.Edge[i][j]);
+                    }
+                    printf("\n");
+          }
+}
+
 /*图G的初始化*/
 void InitGraph(MGraph* G,int MGraph_Size)
 {
@@ -25,12 +38,12 @@ int InsertVertex(MGraph* G, VertexType x)
           else
           {
                     G->Vex[G->vexnum] = x;      //新增加一个结点
-                    G->Edge[G->vexnum][G->vexnum] = 0;    //位于对角线上的元素设置为0
                     for (int i = 0; i < G->MaxVertexNum; ++i)
                     {
                               G->Edge[G->vexnum][i] = MaxEdgeLength;    //行设置为不连通
                               G->Edge[i][G->vexnum] = MaxEdgeLength;    //列清空设置为不连通
                     }
+                    G->Edge[G->vexnum][G->vexnum] = 0;    //位于对角线上的元素设置为0
                     G->vexnum++;                  //结点数+1
                     return TRUE;
           }
