@@ -21,10 +21,10 @@
     <ClCompile Include="MGraph.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Direct_Edge.c">
+    <ClCompile Include="DirectedEdge.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="No_Direct_Edge.c">
+    <ClCompile Include="UnDirectedEdge.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,10 +32,10 @@
     <ClInclude Include="MGraph.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Direct_Edge.h">
+    <ClInclude Include="DirectedEdge.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="No_Direct_Edge.h">
+    <ClInclude Include="UnDirectedEdge.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

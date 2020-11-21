@@ -139,15 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Direct_Edge.c" />
+    <ClCompile Include="DirectedEdge.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MGraph.c" />
-    <ClCompile Include="No_Direct_Edge.c" />
+    <ClCompile Include="UnDirectedEdge.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Direct_Edge.h" />
+    <ClInclude Include="DirectedEdge.h" />
     <ClInclude Include="MGraph.h" />
-    <ClInclude Include="No_Direct_Edge.h" />
+    <ClInclude Include="UnDirectedEdge.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
