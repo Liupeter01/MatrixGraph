@@ -4,6 +4,7 @@ void InitGraph(MGraph* G)               //Í¼GµÄ³õÊ¼»¯
 {
           G->MaxVertexNum = Default_Vertices_Size;                    //Ä¬ÈÏ½áµãµÄ´óÐ¡
           G->arcnum =  G->vexnum = 0;      //Ã»ÓÐ½áµãÃ»ÓÐ±ß
+          G->EdgeValue = FALSE;
 }
 
 void DestroyGraph(MGraph* G)            //Í¼GµÄÏú»Ù
@@ -15,7 +16,9 @@ void DestroyGraph(MGraph* G)            //Í¼GµÄÏú»Ù
                     free(G->Edge[i]);
           }
           free(G->Edge);
+          free(G->Vex);
           G->Edge = NULL;
+          G->Vex = NULL;
           G->arcnum = G->vexnum = 0;
 }
 
@@ -52,7 +55,7 @@ void DisplayGraph(MGraph G)             //Í¼GµÄÊä³ö
           printf("\n");
 }
 
-BOOL ExtendGraphSize(MGraph* G,VertexType*arr)                //Í¼GµÄ¿Õ¼ä·ÖÅäÒÔ¼°Ä¬ÈÏ¿Õ¼äÀ©ÈÝº¯Êý
+BOOL ExtendGraphSize(MGraph* G,VertexType*arr, int type)                //Í¼GµÄ¿Õ¼ä·ÖÅäÒÔ¼°Ä¬ÈÏ¿Õ¼äÀ©ÈÝº¯Êý
 {
           int GraphSize = (((int)strlen(arr) > G->MaxVertexNum) ? (int)strlen(arr) : G->MaxVertexNum);//Í¼µÄ´óÐ¡£¬¶¥µãÊý¶àÓÚÄ¬ÈÏ¿Õ¼äÊý
           G->Vex = (VertexType*)calloc(GraphSize, sizeof(VertexType));
@@ -62,7 +65,7 @@ BOOL ExtendGraphSize(MGraph* G,VertexType*arr)                //Í¼GµÄ¿Õ¼ä·ÖÅäÒÔ¼
           {
                     return FALSE;
           }
-          memset(G->Edge, 0, sizeof(EdgeType*) * GraphSize);
+          memset(G->Edge, ((type == NORMALGRAPH) ? 0 : INFINITYSIZE), sizeof(EdgeType*) * GraphSize);
           for (int i = 0; i < GraphSize; ++i)
           {
                     G->Edge[i] = (EdgeType*)calloc(GraphSize, sizeof(EdgeType));    //À©ÈÝ
@@ -71,7 +74,7 @@ BOOL ExtendGraphSize(MGraph* G,VertexType*arr)                //Í¼GµÄ¿Õ¼ä·ÖÅäÒÔ¼
                     {
                               return FALSE;
                     }
-                    memset(G->Edge[i], 0, sizeof(EdgeType) * GraphSize);  //È«²¿³õÊ¼»¯Îª0
+                    memset(G->Edge[i], ((type == NORMALGRAPH) ? 0 : INFINITYSIZE), sizeof(EdgeType) * GraphSize);  //È«²¿³õÊ¼»¯Îª0
           }
           G->MaxVertexNum = GraphSize;         //À©Õ¹×î´óÈÝÁ¿
           return TRUE;
@@ -103,8 +106,50 @@ void ShowEdgeValue(MGraph G, VertexType x, VertexType y)    //Êä³öÍ¼ÖÐÄ³Ìõ±ßµÄÈ¨
           }
 }
 
-//ÔÚÍ¼GÖÐ²åÈë½áµãx
-BOOL InsertVertex(MGraph* G, VertexType x)
+BOOL InsertEdge(MGraph* G, VertexType x, VertexType y, int Edge_Value, int Type)
+{
+          G->EdgeValue = ((Edge_Value == 1) ? FALSE : TRUE);         //È¨ÖµÉè¶¨
+          int x_pos = LocateVertex(*G, x);
+          int y_pos = LocateVertex(*G, y);     //xºÍyµÄÎ»ÖÃ
+          if (x_pos != -1 && y_pos != -1)                   //Á½¸ö¶¥µã±ØÐë´æÔÚ
+          {
+                    if (Type == DIRECTEDGRAPH)     //ÓÐÏòÍ¼
+                    {
+                              G->Edge[x_pos][y_pos] = Edge_Value;
+                    }
+                    else if (Type == UNDIRECTEDGRAPH)       //ÎÞÏòÍ¼
+                    {
+                              G->Edge[x_pos][y_pos] = G->Edge[y_pos][x_pos] = Edge_Value;
+                    }
+                    G->arcnum++;        //±ßÊý×ÔÔö
+                    return TRUE;
+          }
+          return FALSE;       //²åÈëÊ§°Ü
+}
+
+BOOL RemoveEdge(MGraph* G, VertexType x, VertexType y, int Value, int Type)      //ÔÚÍ¼GÖÐÉ¾³ý±ß
+{
+          int x_pos = LocateVertex(*G, x);
+          int y_pos = LocateVertex(*G, y);     //xºÍyµÄÎ»ÖÃ
+
+          if (x_pos != -1 && y_pos != -1)                   //Á½¸ö¶¥µã±ØÐë´æÔÚ
+          {
+                    if (Type == DIRECTEDGRAPH)     //ÓÐÏòÍ¼
+                    {
+                              G->Edge[x_pos][y_pos] = Value;          //0»ò·ÇÁ¬Í¨×´Ì¬
+                    }
+                    else if (Type == UNDIRECTEDGRAPH)       //ÎÞÏòÍ¼
+                    {
+                              G->Edge[x_pos][y_pos] = Value;  //0»ò·ÇÁ¬Í¨×´Ì¬
+                              G->Edge[y_pos][x_pos] = Value; //0»ò·ÇÁ¬Í¨×´Ì¬
+                    }
+                    G->arcnum--;        //±ßÊý×ÔÔö
+                    return TRUE;
+          }
+          return FALSE;       //²åÈëÊ§°Ü
+}
+
+BOOL InsertVertex(MGraph* G, VertexType x)      //ÔÚÍ¼GÖÐ²åÈë½áµãx
 {
           if (G->vexnum >= G->MaxVertexNum)       //½áµã¿Õ¼äÂúÁË
           {
@@ -112,14 +157,14 @@ BOOL InsertVertex(MGraph* G, VertexType x)
           }
           else
           {
-                    G->Vex[G->vexnum++] = x;      //ÐÂÔö¼ÓÒ»¸ö½áµãÇÒ
+                    G->Vex[G->vexnum++] = x;      //ÐÂÔö¼ÓÒ»¸ö½áµãÇÒ½áµãÊý×ÔÔö
                     return TRUE;
           }
 }
 
-void CreateBatchVertex(MGraph* G, VertexType* arr)          //ÔÚÍ¼GÖÐÅúÁ¿²åÈë¶¥µã
+void CreateBatchVertex(MGraph* G, VertexType* arr, int type)          //ÔÚÍ¼GÖÐÅúÁ¿²åÈë¶¥µã
 {
-          if (ExtendGraphSize(G, arr))   //ÅÐ¶Ï²åÈëµÄ¶¥µãÊÇ·ñÐèÒªÀ©ÈÝ
+          if (ExtendGraphSize(G, arr, type))   //ÅÐ¶Ï²åÈëµÄ¶¥µãÊÇ·ñÐèÒªÀ©ÈÝ
           {
                     for (VertexType* p = arr; *p != '\0'; ++p)
                     {
@@ -132,16 +177,16 @@ void CreateBatchVertex(MGraph* G, VertexType* arr)          //ÔÚÍ¼GÖÐÅúÁ¿²åÈë¶¥µ
 }
 
 //ÔÚÍ¼GÖÐÉ¾³ý½áµãx£¬¸Ãº¯Êý°üº¬¶¥µãµÄÓÐÏò±ßºÍÎÞÏò±ßµÄ´¦Àí
-BOOL DeleteVertex(MGraph* G, VertexType x)          
+BOOL RemoveVertex(MGraph* G, VertexType x)
 {
           int x_pos = LocateVertex(*G, x);        //Ñ°ÕÒ¶¥µãÏÂ±ê
-          if (x_pos != -1)    //¸ø¶¥µã±ØÐë´æÔÚ
+          if (x_pos != -1)    //¶¥µã±ØÐë´æÔÚ
           {
                     G->Vex[x_pos] = 0;
                     for (int i = 0; i < G->MaxVertexNum; ++i)   //½«¸Ã¶¥µãµÄËùÓÐµÄ±ßÉ¾³ý
                     {
                               G->Edge[x_pos][i] = 0; //ÐÐÇå¿ÕÉ¾³ýËùÓÐµÄ³ö±ß
-                              G->Edge[i][x_pos] =0;//ÁÐÇå¿ÕÉ¾³ýËùÓÐµÄÈë±ß                    
+                              G->Edge[i][x_pos] = 0;//ÁÐÇå¿ÕÉ¾³ýËùÓÐµÄÈë±ß                    
                     }
                     G->vexnum--;        //½áµãÊý-1
                     return TRUE;
@@ -156,12 +201,15 @@ int FindFirstNeighbor(MGraph G, VertexType x)              //ÔÚÍ¼ÖÐÑ°ÕÒÄ³Ò»¸ö¶¥µ
           int x_pos = LocateVertex(G, x);
           int flag = 0;       //ÅÐ¶ÏÊÇ·ñÕÒµ½
           int TheFirst = 0;
-          for (TheFirst = 0;  TheFirst < G.MaxVertexNum; ++TheFirst)
+          if (x_pos != -1)                   //¶¥µã±ØÐë´æÔÚ
           {
-                    if (G.Edge[x_pos][TheFirst] != 0 && G.Edge[x_pos][TheFirst] != INFINITYSIZE) //²»ÊÇ×ÔÉíÇÒ±ØÐëÁ¬Í¨
+                    for (TheFirst = 0; TheFirst < G.MaxVertexNum; ++TheFirst)
                     {
-                              flag = 1;
-                              break;
+                              if (G.Edge[x_pos][TheFirst] != 0 && G.Edge[x_pos][TheFirst] != INFINITYSIZE) //²»ÊÇ×ÔÉíÇÒ±ØÐëÁ¬Í¨
+                              {
+                                        flag = 1;
+                                        break;
+                              }
                     }
           }
           return ((!flag) ? -1 : TheFirst);  //Ã»ÓÐÕÒµ½»ò·µ»Ø¶ÔÓ¦½áµãÏÂ±ê
@@ -174,7 +222,7 @@ int FindNextNeighbor(MGraph G, VertexType x, VertexType y)          //ÔÚÍ¼ÖÐÑ°ÕÒ
           int y_pos = LocateVertex(G, y);     //ÓÃÓÚ±£´æyµÄÎ»ÖÃ
           int flag = 0;       //ÅÐ¶ÏÊÇ·ñÕÒµ½
           int TheNext = 0;
-          if (x_pos != -1 && y_pos != -1)                   //
+          if (x_pos != -1 && y_pos != -1)                   //¶¥µã±ØÐë´æÔÚ
           {
                     for (TheNext = y_pos + 1; TheNext < G.MaxVertexNum; ++TheNext)
                     {
