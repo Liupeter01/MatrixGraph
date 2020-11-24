@@ -16,7 +16,7 @@
 #define DIRECTEDGRAPH 0x33    //有向图
 #define UNDIRECTEDGRAPH 0x44  //无向图
 
-/*图是否含有权重*/
+/*图是否含有权*/
 #define GRAPHWITHVALUE 0x44    //有权图
 #define NORMALGRAPH 0x55  //无权图
 
