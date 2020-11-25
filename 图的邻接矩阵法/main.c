@@ -11,12 +11,14 @@ int main()
           VertexType arr[] = { "ABCDEF" };
           CreateBatchVertex(&Graph, arr, GRAPHWITHVALUE);      //顶点列表批量添加
 
-          VertexType arr1[] = "ACFDE";
-          VertexType arr2[] = "BEAEF";
-
-          for (int i = 0; i < 5; ++i)
+          Pair pair[] =
           {
-                    InsertUnDirectEdgeValue(&Graph, *(arr1+i), *(arr2 + i), rand() % 30);
+                    {'A','B',15}, {'C','E',8}, {'F','A',27}, {'D','E',3}, {'E','F',9}
+          };                  //带权边
+
+          for (int i = 0; i < sizeof(pair)/sizeof(Pair); ++i)
+          {
+                    InsertDirectEdgeValue(&Graph, pair[i].VexOne, pair[i].VexTwo, pair[i].distance);
           }
 
           DisplayGraph(Graph);          //图的输出
